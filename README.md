@@ -1,11 +1,11 @@
 # ImageRepo
 
 # Features and Challenges
- - Prevent UnAuthorized Access and Operation by using `jwt-token` to each API route
- - Ensure secured uploading and storing by split each image into fixed size chunk, store there reference using sha256 hash
- - secure deletion are managed by blobs manager (in case, users are uploading same images)
- - LRU cache for faster transmission
- - Presitant Storage (via PostgreSQL)
+ - Secured CURD operation using `jwt-token` to each protected API route
+ - Optimized storing by split each image (file) into fixed size chunk and referenced using its sha256 hash
+ - Deletion are managed by blobs manager (in case of same images, we only decrease count before do the actual deletion)
+ - LRU cache used for faster transmission
+ - Presitant Storage (via PostgreSQL), data is presitant even server reboot
 
 # Backend Struture
 ![Structure](./diagram_1.jpg)
