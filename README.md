@@ -20,14 +20,69 @@
  - Use Postman or similiar app to communicate with the server
 
 # Register User
- - Send POST to 'http://127.0.0.1:5666/register'
- - In Request Body, Include Following format
+ - `POST` to 'http://127.0.0.1:5666/register'
+ - In Request Body, Include Following format as `JSON`
  - `
  {
   "name": "YOUR USERNAME",
   "password": PASSWORD,
   "email": EMAIL ADDR"
  }`
+
+# Login User
+- `POST` to 'http://127.0.0.1:5666/login'
+- Include Following `JSON` Format
+- `{
+  "username": "2@umd.edu",
+  "password": "123456"
+  } ` 
+
+- You will get an access_token
+
+# Upload Image 
+- `POST` to 'http://127.0.0.1:5666/images'
+- Header: `Authorization: Bearer + " " + token`
+- Body Type: `form-data`
+
+- `{
+    "file": ATTACHED YOUR IMAGE HERE (use postman build in function),
+    "description": DESCRIPTION,
+    "isPrivate": 0 or 1 (type `int`),
+    "accessKey": ACCESSKEY 
+    }`
+
+- if success, you will see many binary file in `blobs` folder
+- will return a response like below
+- `{
+    "accessKey": "0123",
+    "creator": 2,
+    "id": 8,
+    "locked": true,
+    "name": "Screen_Shot_2021-06-14_at_10.13.19_AM.png"
+}`
+- `id` is the image ID
+
+# Get Image
+- `GET` to `'http://127.0.0.1:5666/images/image_id' (image_id is a variable of type int)`
+- Header: `Authorization: Bearer + " " + token`
+- args: if you are `not` the creator, and the image is private, then you need to provide `accesskey` in params
+- You will see your image in `outputs` directory
+
+# Update image option (private/public)
+- `PUT` to `'http://127.0.0.1:5666/images/image_id' (image_id is a variable of type int)`
+- Header: `Authorization: Bearer + " " + token`
+- Body `JSON` TYPE
+- Example 
+- `{
+    "description":"des",
+    "isPrivate": 0,
+    "accessKey": "0000"
+}`
+
+# DELETE image 
+- `DELETE` to `'http://127.0.0.1:5666/images/image_id' (image_id is a variable of type int)`
+- Header: `Authorization: Bearer + " " + token`
+
 
 # Test
  - Run 
@@ -37,4 +92,8 @@
  - Prevent UnAuthorized Access and Operation by adding `jwt-token` to each API route
  - Ensure secured uploading and storing by split each image into fixed size chunk, store there reference using sha256 hash
  - secure deletion are managed by blobs manager (in case, users are uploading same images)
- - LRU cache with 
+ - LRU cache for faster transmission
+ - Presitant Storage (via PostgreSQL)
+
+# Backend Struture
+![Structure](./diagram_1.jpg)
