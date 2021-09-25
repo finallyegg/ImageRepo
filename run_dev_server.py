@@ -13,4 +13,4 @@ if __name__ == "__main__":
         Base.metadata.create_all(engine)
         print("DB Resetted")
         exit()
-    app.run(port=5666)
+    app.run(port=app.config["PORT"])

@@ -22,7 +22,8 @@ app.register_blueprint(image_chunk_api)
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def index(path):
-    if path != "" and os.path.exists(app.static_folder + "/" + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, "index.html")
+    return None, 404
+    # if path != "" and os.path.exists(app.static_folder + "/" + path):
+    #     return send_from_directory(app.static_folder, path)
+    # else:
+    #     return send_from_directory(app.static_folder, "index.html")
