@@ -1,5 +1,15 @@
 # ImageRepo
 
+# Features and Challenges
+ - Prevent UnAuthorized Access and Operation by using `jwt-token` to each API route
+ - Ensure secured uploading and storing by split each image into fixed size chunk, store there reference using sha256 hash
+ - secure deletion are managed by blobs manager (in case, users are uploading same images)
+ - LRU cache for faster transmission
+ - Presitant Storage (via PostgreSQL)
+
+# Backend Struture
+![Structure](./diagram_1.jpg)
+
 # Running the database
  - `in IMAGEREPO` 
  - `docker-compose up` (must have docker installed)
@@ -88,12 +98,5 @@
  - Run 
    `python3 tests/apiTests/run_test.py `
 
-# Features and Challenges
- - Prevent UnAuthorized Access and Operation by adding `jwt-token` to each API route
- - Ensure secured uploading and storing by split each image into fixed size chunk, store there reference using sha256 hash
- - secure deletion are managed by blobs manager (in case, users are uploading same images)
- - LRU cache for faster transmission
- - Presitant Storage (via PostgreSQL)
 
-# Backend Struture
-![Structure](./diagram_1.jpg)
+
