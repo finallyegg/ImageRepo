@@ -11,7 +11,7 @@
 ![Structure](./diagram_1.jpg)
 
 # Running the database
- - `in IMAGEREPO` 
+ - `cd ./ImageRepo` 
  - `docker-compose up` (must have docker installed)
 
 # Running the backend
