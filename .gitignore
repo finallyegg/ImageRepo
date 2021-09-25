@@ -1,0 +1,9 @@
+venv*
+.vscode
+*pycache*
+
+blobs/*
+!blobs/__init__
+
+outputs/*
+!outputs/__init__
