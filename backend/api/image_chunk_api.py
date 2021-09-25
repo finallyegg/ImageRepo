@@ -13,6 +13,8 @@ from backend.models.blob_schema import Blob
 from flask_jwt_extended import jwt_required, get_jwt_identity, decode_token
 from backend.models.lru_cache import LRUCache
 import os
+import glob
+
 
 image_chunk_api = Blueprint("image_chunk_api", __name__)
 lru_size = 50
@@ -46,12 +48,12 @@ def deleteImage(image_id):
                 blob.count -= 1
 
                 if blob.count == 0:
-                    blob.delete()
+                    session.delete(blob)
                     os.remove(app.config["BLOB_URI"] + h)
             session.commit()
             session.flush()
 
-            return jsonify({}), 200
+            return jsonify({}), 202
 
     except Exception as ex:
         print(ex)
@@ -64,7 +66,7 @@ def uploadImageMeta(image_id):
     try:
         current = get_jwt_identity()
         description, isPrivate, accessKey = request.json[
-            "description"], bool(request.json["isPrivate"]), request.json["accessKey"]
+            "description"], int(request.json["isPrivate"]) == 1, request.json["accessKey"]
         with session_scope() as session:
 
             image_chunk = session.query(ImageChunk).get(image_id)
@@ -95,7 +97,7 @@ def uploadImage():
     try:
         current = get_jwt_identity()
         file, description, isPrivate, accessKey = request.files["file"], request.form[
-            "description"], bool(request.form["isPrivate"]), request.form["accessKey"]
+            "description"], request.form["isPrivate"] == 1, request.form["accessKey"]
         with session_scope() as session:
             if not file or not allowed_file(file.filename) or isPrivate == None or (isPrivate == True and not accessKey):
                 raise ValueError("Empty file or Param")
@@ -135,7 +137,6 @@ def getImage(image_id):
             image_DTO = ImageChunkDTO.from_schema_object(image_chunk)
             image_name = image_DTO.name
             hash_list = json.loads(image_DTO.pieceJSON)
-
             if image_DTO.locked and current != image_DTO.creator and accessKey != image_DTO.accessKey:
                 return {"msg": "no permission"}, 401
 
@@ -202,7 +203,7 @@ def encodeAndStore(payload):
 
 
 @image_chunk_api.route("/reset", methods=["POST"])
-def resetImage(image_id):
+def resetImage():
     try:
         with session_scope() as session:
             lru_cache = LRUCache(lru_size)
@@ -211,11 +212,16 @@ def resetImage(image_id):
             session.query(User).delete()
             session.query(Blob).delete()
 
-            import shutil
-            shutil.rmtree(app.config["BLOB_URI"])
-            shutil.rmtree(app.config["OUTPUT_URI"])
+            files = glob.glob(app.config["BLOB_URI"] + "*")
+            for f in files:
+                os.remove(f)
 
-            return jsonify(retval), 200
+            files = glob.glob(app.config["OUTPUT_URI"] + "*")
+            for f in files:
+                os.remove(f)
+
+            session.commit()
+            return jsonify({}), 200
 
     except Exception as ex:
         print(ex)

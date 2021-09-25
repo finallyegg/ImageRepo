@@ -3,7 +3,7 @@ venv*
 *pycache*
 
 blobs/*
-!blobs/__init__
+# !blobs/__init__
 
 outputs/*
-!outputs/__init__
+# !outputs/__init__
