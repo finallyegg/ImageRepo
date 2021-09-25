@@ -1,11 +1,15 @@
 # ImageRepo
-
+ - Access and permission control
+ - Secure deletion and uploading
+ - Secure and effcient storage
+ - Presitent storage
+ - Scale well (easy to add new function / properties)
 # Features and Challenges
  - Secured CURD operation using `jwt-token` to each protected API route
- - Optimized storing by split each image (file) into fixed size chunk and referenced using its sha256 hash
+ - Optimized storage by split each image (file) into fixed size chunk and referenced using its sha256 hash
  - Deletion are managed by blobs manager (in case of same images, we only decrease count before do the actual deletion)
  - LRU cache used for faster transmission
- - Presitant Storage (via PostgreSQL), data is presitant even server reboot
+ - Presitent Storage (via PostgreSQL), data is presitent even server reboot
 
 # Backend Struture
 ![Structure](./diagram_1.jpg)
